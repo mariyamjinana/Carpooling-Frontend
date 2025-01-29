@@ -1,153 +1,112 @@
-import React from "react";
-import { Container, Row, Col, Card, Button, Table, ProgressBar, Badge } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Modal, Container, Navbar, Nav, Form, InputGroup, Button, Collapse, NavLink } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+
 
 const Drivers = () => {
+const [openUsers, setOpenUsers] = useState(false); // State to toggle the Users dropdown
+  const [openRides, setOpenRides] = useState(false); // State to toggle the Rides dropdown
+
   return (
-    <Container className="mt-4">
-      <Row>
-        {/* Driver Profile Section */}
-        <Col lg={4}>
-          <Card className="p-3 shadow-sm">
-            <div className="text-center">
-              <img
-                src="https://via.placeholder.com/150"
-                alt="Driver Profile"
-                className="rounded-circle mb-3"
-                style={{ width: "120px", height: "120px" }}
-              />
-              <h4>John Doe</h4>
-              <p className="text-muted">john.doe@email.com</p>
-              <Badge bg="success" className="mb-3">
-                Active
-              </Badge>
-              <p>
-                <strong>Phone:</strong> +1 123-456-7890
-              </p>
-              <p>
-                <strong>License:</strong> DL-123456789
-              </p>
-              <Button variant="outline-primary" className="me-2">
-                Suspend Driver
-              </Button>
-              <Button variant="outline-secondary">Send Message</Button>
+    <div className="d-flex">
+      {/* Sidebar */}
+      <div className="bg-light vh-100 p-3" style={{ width: '250px' }}>
+        <div className="text-center mb-4">
+          <h5>ShareRide</h5>
+          <p>Admin</p>
+        </div>
+        <Nav className="flex-column">
+          <Nav.Link className="mb-2">Dashboard</Nav.Link>
+          <Nav.Link
+            className="mb-2"
+            onClick={() => setOpenUsers(!openUsers)} // Toggle Users dropdown
+            aria-controls="users-collapse"
+            aria-expanded={openUsers}
+          >
+            Users
+          </Nav.Link>
+          <Collapse in={openUsers}>
+          
+          <div id="users-collapse" className="ps-3">
+              <Nav.Link href='/drivers' className="mb-2">Drivers</Nav.Link>
+              <Nav.Link href='/passengers' className="mb-2">Passengers</Nav.Link>
+              
             </div>
-          </Card>
-        </Col>
+               
+          </Collapse>
 
-        {/* Driver Statistics */}
-        <Col lg={8}>
-          <Row>
-            <Col md={4}>
-              <Card className="p-3 text-center shadow-sm">
-                <h6>Total Rides</h6>
-                <h4>450</h4>
-                <p className="text-success">+10% this month</p>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="p-3 text-center shadow-sm">
-                <h6>Total Earnings</h6>
-                <h4>$12,340</h4>
-                <p className="text-success">+5% this month</p>
-              </Card>
-            </Col>
-            <Col md={4}>
-              <Card className="p-3 text-center shadow-sm">
-                <h6>Average Rating</h6>
-                <h4>4.8</h4>
-                <p className="text-muted">Based on 300 reviews</p>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+          <Nav.Link className="mb-2" onClick={() => setOpenRides(!openRides)} aria-controls="rides-collapse" aria-expanded={openRides}>
+            Rides
+          </Nav.Link>
+          <Collapse in={openRides}>
+            <div id="rides-collapse" className="ps-3">
+              <NavLink className="mb-2">Active Rides</NavLink>
+              <NavLink className="mb-2">Completed Rides</NavLink>
+              <Nav.Link className="mb-2">Cancelled Rides</Nav.Link>
+            </div>
+          </Collapse>
+        </Nav>
+      </div>
 
-      {/* Trip History */}
-      <Row className="mt-4">
-        <Col>
-          <Card className="p-3 shadow-sm">
-            <h5>Trip History</h5>
-            <Table responsive striped bordered hover className="mt-3">
-              <thead>
+      {/* Main Content */}
+      <div className="flex-grow-1">
+        {/* Top Navbar */}
+        <Navbar bg="light" expand="lg" className="shadow-sm">
+          <Container fluid>
+            <Form className="d-flex me-auto ms-5">
+              <InputGroup>
+                <Form.Control type="search" placeholder="Search" className="rounded-0" />
+              </InputGroup>
+            </Form>
+            <Nav>
+              <Nav.Link href="#notifications"></Nav.Link>
+              <Nav.Link href="#profile">David Greymaax</Nav.Link>
+            </Nav>
+          </Container>
+        </Navbar>
+
+        {/* Drivers Content */}
+        <Container className="mt-4">
+          <div className="text-end mb-3">
+            {/* <button type="button" className="btn btn-primary">
+              <h4 className="text-white">+ Add Driver</h4>
+            </button> */}
+          </div>
+
+          <h1 className="text-center">Drivers</h1>
+
+          <div className="d-flex justify-content-center align-items-center">
+            <table className="border border-1 p-5 text-center shadow mt-3 w-100">
+              <thead className="border border-2">
                 <tr>
-                  <th>Date</th>
-                  <th>Passenger</th>
-                  <th>Distance</th>
-                  <th>Earnings</th>
-                  <th>Status</th>
+                  <th scope="col" className="p-4">Name</th>
+                  <th scope="col" className="p-4">Username</th>
+                  <th scope="col" className="p-4">E-mail</th>
+                  <th scope="col" className="p-4">Phone</th>
+                  <th scope="col" className="p-4">Address</th>
+                  <th scope="col" className="p-4"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>2025-01-01</td>
-                  <td>Jane Smith</td>
-                  <td>15 km</td>
-                  <td>$25</td>
-                  <td>
-                    <Badge bg="success">Completed</Badge>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2025-01-02</td>
-                  <td>Robert Brown</td>
-                  <td>10 km</td>
-                  <td>$18</td>
-                  <td>
-                    <Badge bg="danger">Cancelled</Badge>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2025-01-03</td>
-                  <td>Emily White</td>
-                  <td>20 km</td>
-                  <td>$30</td>
-                  <td>
-                    <Badge bg="success">Completed</Badge>
-                  </td>
+                  <td className="p-4">John Doe</td>
+                  <td className="p-4">john doe</td>
+                  <td className="p-4">John@gmail.com</td>
+                  <td className="p-4">+91 xxxxxxxxxxx</td>
+                  <td className="p-4">123 House</td>
+                 <Link to={'/userdetails'}><td className="p-4"><button className='btn btn-success w-100'>view</button></td></Link>
+                  <td className="p-4"><button className='btn btn-danger'>Delete</button></td>
+
+
+                 
+                 
                 </tr>
               </tbody>
-            </Table>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Feedback Section */}
-      <Row className="mt-4">
-        <Col lg={6}>
-          <Card className="p-3 shadow-sm">
-            <h5>Feedback</h5>
-            <ul className="list-unstyled mt-3">
-              <li className="mb-3">
-                <strong>Jane Smith:</strong> "Great driver! Very punctual and polite."
-              </li>
-              <li className="mb-3">
-                <strong>Robert Brown:</strong> "The ride was smooth, but the car was not very clean."
-              </li>
-              <li>
-                <strong>Emily White:</strong> "Excellent service. Would recommend!"
-              </li>
-            </ul>
-          </Card>
-        </Col>
-
-        {/* Goals/Progress */}
-        <Col lg={6}>
-          <Card className="p-3 shadow-sm">
-            <h5>Progress</h5>
-            <div className="d-flex align-items-center">
-              <ProgressBar
-                now={75}
-                label="75% Target Achieved"
-                variant="info"
-                className="flex-grow-1 me-3"
-                style={{ height: "30px" }}
-              />
-              <p className="mb-0">Target: 500 Rides</p>
-            </div>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            </table>
+          </div>
+        </Container>
+      </div>
+    </div>
   );
 };
 
