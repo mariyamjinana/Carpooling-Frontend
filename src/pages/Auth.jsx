@@ -1,7 +1,42 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { registerApi } from '../service/allApi'
 
 function Auth({register}) {
+  const [userDetails,setUserDetails] = useState({
+    username:"",
+    email:"",
+    password:""
+  })
+  const navigate = useNavigate()
+  // console.log(userDetails);
+   
+  const handleRegister = async () => {
+    const { username, email, password } = userDetails;
+
+    if (!username || !email || !password) {
+        alert("Fill the form completely");
+        return;
+    }
+
+    const result = await registerApi(userDetails);
+    console.log("API Response:", result); 
+
+    if (result?.status === 200) {
+        alert("Registered successfully");  
+        setUserDetails({
+            username: "",
+            email: "",
+            password: ""
+        })
+        navigate('/login')
+    } else if (result?.status === 406) {
+        alert(result?.data);  
+    } else {
+        console.error("Unexpected response:", result);
+        alert("Something went wrong");
+    }
+};
   return (
     <>
     <div className='mt-2 p-5'>
@@ -16,16 +51,16 @@ function Auth({register}) {
                         :
                         <h1 className='text-center text-warning'>REGISTER</h1>
                       }
-                      {register && <input type="text" placeholder='E-mail' className='form-control mt-3' />}
-                        <input type="text" placeholder='Username' className='form-control mt-3'/>    
-                        <input type="text" placeholder='Password' className='form-control mt-3' />
+                      {register && <input type="text" placeholder='E-mail' className='form-control mt-3' onChange={(e)=>setUserDetails({...userDetails,email:e.target.value})} />}
+                        <input type="text" placeholder='Username' className='form-control mt-3' onChange={(e)=>setUserDetails({...userDetails,username:e.target.value})} />    
+                        <input type="text" placeholder='Password' className='form-control mt-3' onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})} />
                         {!register?<div className='text-center mt-3'>
                         <button className='btn btn-warning form-control'>Login</button>
                         <p className=' mt-3'>New User?click here to <Link to={'/register'} className='text-danger'>Register</Link></p>
                         </div>
                        :
                        <div className='text-center mt-3'>
-                        <button className='btn btn-warning form-control'>Register</button>    
+                        <button className='btn btn-warning form-control' onClick={handleRegister}>Register</button>    
                         <p className=' mt-3'>Existing User?click here to <Link to={'/login'} className='text-danger'>Login</Link></p>                   
                         </div>}
                     </div>
